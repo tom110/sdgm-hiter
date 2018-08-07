@@ -1,0 +1,17 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.main {
+    text-align: center;
+    padding-top: 10%;
+}
+input,textarea{
+    margin-top: 10px;
+}
+textarea{
+    height: 100px;
+}

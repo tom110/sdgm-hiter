@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>局网站文章创建时间修改</title>
+    <link rel="stylesheet" th:href="@{css/main.css}"/>
+    <script th:src="@{js/jquery-1.8.2.min.js}"></script>
+</head>
+<body>
+<div class="main">
+    <input id="articleId" type="number" placeholder="请填写文章ID"/>
+    <br />
+    <input id="articleDate" type="datetime-local" placeholder="文章发布日期"/>
+    <br />
+    <label id="articleTitle" placeholder="文章名"></label>
+    <br />
+    <input id="updateDate" type="button" value="提交修改日期"/>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#articleId").blur(function () {
+            if($(this).val()!=""){
+                $.post("getArticleDateAndTitle",{
+                    articleId:parseInt($(this).val())
+                },function (data) {
+                    if(data!="") {
+                        $.each(data, function (key, value) {
+                            key = new Date(key);
+                            key.setHours(key.getHours() + 1);
+                            var str = key.getFullYear() + "-" +
+                                fix((key.getMonth() + 1), 2) +
+                                "-" + fix(key.getDate(), 2) + "T" +
+                                fix(key.getHours()-1, 2) + ":" +
+                                fix(key.getMinutes(), 2);
+                            $("#articleDate").val(str);
+                            $("#articleTitle").text(value);
+                        })
+                    }else{
+                        $("#articleDate").val("");
+                        $("#articleTitle").text("");
+                    }
+
+                });
+            }
+        });
+
+        $("#updateDate").click(function () {
+
+            var now=new Date();
+            x = $("#articleDate").val();
+            now.setFullYear(parseInt(x.substring(0, 4)));
+            now.setMonth(parseInt(x.substring(5, 7)) - 1);
+            now.setDate(parseInt(x.substring(8, 10)));
+            now.setHours(parseInt(x.substring(11, 13)));
+            now.setMinutes(parseInt(x.substring(14, 16)));
+
+            $.post("updateArticleDate",{
+                articleDate:now,
+                articleId:$("#articleId").val()
+            },function (data) {
+                alert(data);
+            });
+        });
+
+    })
+
+    //将日期格式化为两位，不足补零
+    function fix(num, length) {
+        return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
+    }
+</script>
+</body>
+</html>

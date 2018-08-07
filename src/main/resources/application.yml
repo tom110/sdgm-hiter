@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: hiter
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+server:
+  port: 12121
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
+    com:
+      mkyong: debug
+
+---
+spring:
+  profiles: dev
+  datasource:
+      url: jdbc:mysql://localhost:3306/mcms?useSSL=false&characterEncoding=utf-8
+
+      username: root
+      password: root
+
+---
+spring:
+  profiles: prod
+  datasource:
+      url: jdbc:mysql://203.56.70.2:3306/mcms?useSSL=false&characterEncoding=utf-8
+      username: root
+      password: admin
